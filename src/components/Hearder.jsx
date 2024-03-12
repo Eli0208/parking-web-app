@@ -10,6 +10,7 @@ import {
   Image,
 } from '@chakra-ui/react';
 import { SunIcon, MoonIcon } from '@chakra-ui/icons';
+import { Link as RouterLink } from 'react-router-dom'; // Import the Link component from React Router
 import logo from '../assets/dhvsu_logo_new.png';
 
 const NavBar = () => {
@@ -18,14 +19,15 @@ const NavBar = () => {
   return (
     <Box bg="maroon" w="100%" p={4} color="white">
       <Flex align="center">
-        <Heading size="md">
-          <Image src={logo} alt="school-logo" boxSize="15%" mr={4} />
-        </Heading>
+        {/* Wrap the Image component with a Link */}
+        <Link as={RouterLink} to="/" mr={4}>
+          <Image src={logo} alt="school-logo" boxSize="15%" />
+        </Link>
         <Spacer />
-        <Link mr={4} color="white" href="register-car">
+        <Link as={RouterLink} to="/register-car" mr={4} color="white">
           Register Car
         </Link>
-        <Link mr={4} color="white" href="log">
+        <Link as={RouterLink} to="/log" mr={4} color="white">
           Log
         </Link>
         <IconButton
