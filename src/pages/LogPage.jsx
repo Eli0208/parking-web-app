@@ -41,7 +41,7 @@ const LogPage = () => {
       if (!dateParts[0]) return; // Add null check for dateParts
 
       const response = await axios.get(
-        `http://localhost:5000/logs/date/${dateParts[0]}`
+        `https://parking-web-app-backend.onrender.com/logs/date/${dateParts[0]}`
       );
       setLogs(response.data);
     } catch (error) {

@@ -21,7 +21,9 @@ const HomePage = () => {
 
   const fetchCarData = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/cars');
+      const response = await axios.get(
+        'https://parking-web-app-backend.onrender.com/cars'
+      );
       const cars = response.data;
 
       // Calculate the number of registered cars

@@ -22,7 +22,7 @@ const ProfilePage = ({ email }) => {
     const fetchCarDetails = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:5000/cars/email/${email}`
+          `https://parking-web-app-backend.onrender.com/cars/email/${email}`
         );
         setCarDetails(response.data);
       } catch (error) {

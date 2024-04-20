@@ -28,7 +28,9 @@ const CarList = () => {
   useEffect(() => {
     const fetchCars = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/cars/');
+        const response = await axios.get(
+          'https://parking-web-app-backend.onrender.com/cars/'
+        );
         setCars(response.data);
       } catch (error) {
         console.error('Error fetching cars:', error);
