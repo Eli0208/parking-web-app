@@ -22,6 +22,9 @@ const NavBar = ({ isLoggedIn, onLogout, isAdmin }) => {
         <Flex align="center" ml="auto">
           {isAdmin && (
             <>
+              <Link as={RouterLink} to="/list" mr={4} color="white">
+                Users
+              </Link>
               <Link as={RouterLink} to="/register-car" mr={4} color="white">
                 Register Car
               </Link>

@@ -11,7 +11,10 @@ import {
   Td,
   Center,
   Button,
+  Flex,
 } from '@chakra-ui/react';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 import { PDFDownloadLink } from '@react-pdf/renderer';
 import LogsPDF from '../components/LogsPDF';
 
@@ -21,11 +24,25 @@ const LogPage = () => {
 
   useEffect(() => {
     fetchData();
+
+    const fetchDataInterval = setInterval(fetchData, 500);
+
+    return () => clearInterval(fetchDataInterval);
   }, [selectedDate]);
 
   const fetchData = async () => {
     try {
-      const response = await axios.get(`http://localhost:5000/logs`);
+      if (!selectedDate) return; // Add null check for selectedDate
+
+      const dateString = selectedDate.toISOString();
+      if (!dateString) return; // Add null check for dateString
+
+      const dateParts = dateString.split('T');
+      if (!dateParts[0]) return; // Add null check for dateParts
+
+      const response = await axios.get(
+        `http://localhost:5000/logs/date/${dateParts[0]}`
+      );
       setLogs(response.data);
     } catch (error) {
       console.error('Error fetching logs:', error);
@@ -35,18 +52,15 @@ const LogPage = () => {
   return (
     <Box p={4}>
       <Heading size="md">Log</Heading>
-      <Center>
-        <Button mb={4}>
-          <PDFDownloadLink
-            document={<LogsPDF logs={logs} />}
-            fileName="logs.pdf"
-          >
-            {({ loading }) =>
-              loading ? 'Loading document...' : 'Export to PDF'
-            }
-          </PDFDownloadLink>
-        </Button>
-      </Center>
+      <Flex justifyContent="space-between" alignItems="center" mb={4}>
+        <DatePicker
+          selected={selectedDate}
+          onChange={date => setSelectedDate(date)}
+        />
+        <PDFDownloadLink document={<LogsPDF logs={logs} />} fileName="logs.pdf">
+          {({ loading }) => (loading ? 'Loading document...' : 'Export to PDF')}
+        </PDFDownloadLink>
+      </Flex>
       <Center>
         <Table variant="striped" colorScheme="gray" width="75%">
           <Thead>
@@ -62,7 +76,7 @@ const LogPage = () => {
               <React.Fragment key={index}>
                 {log.timeIn.map((timeIn, idx) => (
                   <Tr key={`${index}-${idx}`}>
-                    <Td>{log.rfid}</Td>
+                    <Td>{log.ownerName}</Td>
                     <Td>{timeIn.date.split('T')[0]}</Td>
                     <Td>{timeIn.time}</Td>
                     {log.timeOut[idx] ? (

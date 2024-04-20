@@ -41,7 +41,7 @@ const RegisterCarPage = () => {
 
     try {
       const response = await axios.post(
-        'http://localhost:5000/cars/register-car',
+        'http://192.168.100.65:5000/cars/register-car',
         {
           rfid,
           ownerName,

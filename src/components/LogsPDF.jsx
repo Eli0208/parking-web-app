@@ -40,7 +40,7 @@ const LogsPDF = ({ logs }) => (
         <View style={styles.table}>
           <View style={styles.tableRow}>
             <View style={styles.tableCell}>
-              <Text style={styles.text}>RFID</Text>
+              <Text style={styles.text}>Staff's Name</Text>
             </View>
             <View style={styles.tableCell}>
               <Text style={styles.text}>Date</Text>
@@ -57,7 +57,7 @@ const LogsPDF = ({ logs }) => (
               {log.timeIn.map((timeIn, idx) => (
                 <View key={`${index}-${idx}`} style={styles.tableRow}>
                   <View style={styles.tableCell}>
-                    <Text style={styles.text}>{log.rfid}</Text>
+                    <Text style={styles.text}>{log.ownerName}</Text>
                   </View>
                   <View style={styles.tableCell}>
                     <Text style={styles.text}>

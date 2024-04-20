@@ -8,6 +8,7 @@ import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
 import ProfilePage from './pages/ProfilePage';
 import { jwtDecode } from 'jwt-decode';
+import CarList from './pages/CarList';
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -60,13 +61,13 @@ function App() {
               <Route path="/" element={<LoginPage onLogin={handleLogin} />} />
             )}
             {/* Redirect to HomePage if logged in */}
-            {console.log(isAdmin)}
             {isLoggedIn ? (
               isAdmin ? (
                 <>
                   <Route path="/" element={<HomePage />} />
                   <Route path="/register-car" element={<RegisterCarPage />} />
                   <Route path="/log" element={<LogPage />} />
+                  <Route path="/list" element={<CarList />} />
                 </>
               ) : (
                 <>

@@ -1,84 +1,78 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import {
   Box,
-  Heading,
+  FormControl,
+  FormLabel,
+  Stack,
   Table,
   Thead,
   Tbody,
   Tr,
   Th,
   Td,
-  Center,
-  Button,
 } from '@chakra-ui/react';
-import { PDFDownloadLink } from '@react-pdf/renderer';
-import LogsPDF from '../components/LogsPDF';
+import axios from 'axios';
 
-const LogPage = () => {
-  const [selectedDate, setSelectedDate] = useState(new Date());
-  const [logs, setLogs] = useState([]);
+const ProfilePage = ({ email }) => {
+  const [carDetails, setCarDetails] = useState({});
+  const { rfid, plateNo, timeIn, timeOut } = carDetails;
 
   useEffect(() => {
-    fetchData();
-  }, [selectedDate]);
+    // Fetch car details when the component mounts
+    const fetchCarDetails = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:5000/cars/email/${email}`
+        );
+        setCarDetails(response.data);
+      } catch (error) {
+        console.error('Error fetching car details:', error);
+      }
+    };
 
-  const fetchData = async () => {
-    try {
-      const response = await axios.get(`http://localhost:5000/logs`);
-      setLogs(response.data);
-    } catch (error) {
-      console.error('Error fetching logs:', error);
-    }
-  };
+    fetchCarDetails();
+  }, [email]);
 
   return (
-    <Box p={4}>
-      <Heading size="md">Log</Heading>
-      <Center>
-        <Button mb={4}>
-          <PDFDownloadLink
-            document={<LogsPDF logs={logs} />}
-            fileName="logs.pdf"
-          >
-            {({ loading }) =>
-              loading ? 'Loading document...' : 'Export to PDF'
-            }
-          </PDFDownloadLink>
-        </Button>
-      </Center>
-      <Center>
-        <Table variant="striped" colorScheme="gray" width="75%">
+    <Box p={8}>
+      <Stack spacing={4}>
+        <Box>
+          <FormControl id="rfid">
+            <FormLabel>RFID Number</FormLabel>
+            <p>{rfid}</p>
+          </FormControl>
+        </Box>
+        <Box>
+          <FormControl id="plateNumber">
+            <FormLabel>Plate Number</FormLabel>
+            <p>{plateNo}</p>
+          </FormControl>
+        </Box>
+      </Stack>
+      <Box mt={8}>
+        <Table variant="striped">
           <Thead>
             <Tr>
-              <Th>RFID no.</Th>
               <Th>Date</Th>
-              <Th>Time in</Th>
-              <Th>Time out</Th>
+              <Th>Time In</Th>
+              <Th>Time Out</Th>
             </Tr>
           </Thead>
           <Tbody>
-            {logs.map((log, index) => (
-              <React.Fragment key={index}>
-                {log.timeIn.map((timeIn, idx) => (
-                  <Tr key={`${index}-${idx}`}>
-                    <Td>{log.rfid}</Td>
-                    <Td>{timeIn.date.split('T')[0]}</Td>
-                    <Td>{timeIn.time}</Td>
-                    {log.timeOut[idx] ? (
-                      <Td>{log.timeOut[idx].time}</Td>
-                    ) : (
-                      <Td>-</Td>
-                    )}
-                  </Tr>
-                ))}
-              </React.Fragment>
-            ))}
+            {timeIn &&
+              timeOut &&
+              timeIn.map((entry, index) => (
+                <Tr key={index}>
+                  <Td>{new Date(entry.date).toLocaleDateString()}</Td>
+                  <Td>{entry.time}</Td>
+                  <Td>{timeOut[index] && timeOut[index].time}</Td>
+                </Tr>
+              ))}
           </Tbody>
         </Table>
-      </Center>
+      </Box>
     </Box>
   );
 };
 
-export default LogPage;
+export default ProfilePage;
