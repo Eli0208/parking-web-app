@@ -19,7 +19,8 @@ import { PDFDownloadLink } from '@react-pdf/renderer';
 import LogsPDF from '../components/LogsPDF';
 
 const LogPage = () => {
-  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [startDate, setStartDate] = useState(new Date());
+  const [endDate, setEndDate] = useState(new Date());
   const [logs, setLogs] = useState([]);
 
   useEffect(() => {
@@ -28,20 +29,15 @@ const LogPage = () => {
     const fetchDataInterval = setInterval(fetchData, 500);
 
     return () => clearInterval(fetchDataInterval);
-  }, [selectedDate]);
+  }, [startDate, endDate]);
 
   const fetchData = async () => {
     try {
-      if (!selectedDate) return; // Add null check for selectedDate
-
-      const dateString = selectedDate.toISOString();
-      if (!dateString) return; // Add null check for dateString
-
-      const dateParts = dateString.split('T');
-      if (!dateParts[0]) return; // Add null check for dateParts
+      const startDateString = startDate.toISOString().split('T')[0];
+      const endDateString = endDate.toISOString().split('T')[0];
 
       const response = await axios.get(
-        `https://parking-web-app-backend.onrender.com/logs/date/${dateParts[0]}`
+        `https://parking-web-app-backend.onrender.com/logs/date/${startDateString}/${endDateString}`
       );
       setLogs(response.data);
     } catch (error) {
@@ -53,10 +49,33 @@ const LogPage = () => {
     <Box p={4}>
       <Heading size="md">Log</Heading>
       <Flex justifyContent="space-between" alignItems="center" mb={4}>
-        <DatePicker
-          selected={selectedDate}
-          onChange={date => setSelectedDate(date)}
-        />
+        <Flex>
+          <div>
+            <label htmlFor="startDate">Start Date:</label>
+            <DatePicker
+              id="startDate"
+              selected={startDate}
+              onChange={date => setStartDate(date)}
+              selectsStart
+              startDate={startDate}
+              endDate={endDate}
+              dateFormat="yyyy-MM-dd"
+            />
+          </div>
+          <div style={{ marginLeft: '20px' }}>
+            <label htmlFor="endDate">End Date:</label>
+            <DatePicker
+              id="endDate"
+              selected={endDate}
+              onChange={date => setEndDate(date)}
+              selectsEnd
+              startDate={startDate}
+              endDate={endDate}
+              minDate={startDate}
+              dateFormat="yyyy-MM-dd"
+            />
+          </div>
+        </Flex>
         <PDFDownloadLink document={<LogsPDF logs={logs} />} fileName="logs.pdf">
           {({ loading }) => (loading ? 'Loading document...' : 'Export to PDF')}
         </PDFDownloadLink>
