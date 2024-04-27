@@ -41,7 +41,7 @@ const RegisterCarPage = () => {
 
     try {
       const response = await axios.post(
-        'http://192.168.100.65:5000/cars/register-car',
+        'https://parking-web-app-backend.onrender.com/cars/register-car',
         {
           rfid,
           ownerName,
