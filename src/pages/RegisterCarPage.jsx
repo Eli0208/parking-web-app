@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import Swal from 'sweetalert2'; // Import SweetAlert
 import {
   Box,
   Heading,
@@ -9,6 +10,7 @@ import {
   Button,
   Center,
 } from '@chakra-ui/react';
+import { useNavigate } from 'react-router-dom';
 
 const RegisterCarPage = () => {
   const [rfid, setRfid] = useState('');
@@ -19,8 +21,8 @@ const RegisterCarPage = () => {
   const [color, setColor] = useState('');
   const [password, setPassword] = useState('');
   const [ownersEmail, setOwnersEmail] = useState('');
+  const navigate = useNavigate();
 
-  // Function to generate a random password
   const generatePassword = () => {
     const characters =
       'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -33,7 +35,6 @@ const RegisterCarPage = () => {
     return newPassword;
   };
 
-  // Function to handle form submission
   const handleSubmit = async e => {
     e.preventDefault();
     const newPassword = generatePassword();
@@ -45,18 +46,33 @@ const RegisterCarPage = () => {
         {
           rfid,
           ownerName,
-          ownersEmail, // Include the owner's email in the request
+          ownersEmail,
           plateNo,
           brand,
           model,
           color,
-          password: newPassword, // Send the auto-generated password to the backend
+          password: newPassword,
         }
       );
 
       console.log('Car registered successfully:', response.data);
+
+      // Show success alert
+      Swal.fire({
+        icon: 'success',
+        title: 'Success',
+        text: `Car registered successfully! The password is ${newPassword}`,
+      });
+      navigate('/');
     } catch (error) {
       console.error('Error registering car:', error);
+
+      // Show error alert
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'An error occurred while registering the car. Please try again later.',
+      });
     }
   };
 
@@ -84,7 +100,6 @@ const RegisterCarPage = () => {
             />
           </FormControl>
           <FormControl id="ownersEmail">
-            {' '}
             <FormLabel>Owner's email</FormLabel>
             <Input
               type="email"
