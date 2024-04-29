@@ -45,6 +45,13 @@ const LogPage = () => {
     }
   };
 
+  const convertToPST = dateTimeString => {
+    const dateTimeUTC = new Date(dateTimeString);
+    return dateTimeUTC.toLocaleTimeString('en-US', {
+      timeZone: 'Asia/Singapore',
+    });
+  };
+
   return (
     <Box p={4}>
       <Heading size="md">Log</Heading>
@@ -97,9 +104,9 @@ const LogPage = () => {
                   <Tr key={`${index}-${idx}`}>
                     <Td>{log.ownerName}</Td>
                     <Td>{timeIn.date.split('T')[0]}</Td>
-                    <Td>{timeIn.time}</Td>
+                    <Td>{convertToPST(timeIn.date)}</Td>
                     {log.timeOut[idx] ? (
-                      <Td>{log.timeOut[idx].time}</Td>
+                      <Td>{convertToPST(log.timeOut[idx].date)}</Td>
                     ) : (
                       <Td>-</Td>
                     )}
