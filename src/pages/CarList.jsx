@@ -40,6 +40,14 @@ const CarList = () => {
     fetchCars();
   }, []);
 
+  // Function to convert UTC time to Singapore time
+  const convertToSGTime = dateTimeString => {
+    const dateTimeUTC = new Date(dateTimeString);
+    return dateTimeUTC.toLocaleTimeString('en-US', {
+      timeZone: 'Asia/Singapore',
+    });
+  };
+
   const handleOpenModal = car => {
     setSelectedCar(car);
     setIsModalOpen(true);
@@ -119,11 +127,10 @@ const CarList = () => {
                   selectedCar.timeIn.map((log, index) => (
                     <Tr key={log._id}>
                       <Td>{new Date(log.date).toLocaleDateString()}</Td>
-
-                      <Td>{log.time}</Td>
+                      <Td>{convertToSGTime(log.date)}</Td>
                       <Td>
                         {selectedCar.timeOut[index]
-                          ? selectedCar.timeOut[index].time
+                          ? convertToSGTime(selectedCar.timeOut[index].date)
                           : 'N/A'}
                       </Td>
                     </Tr>
