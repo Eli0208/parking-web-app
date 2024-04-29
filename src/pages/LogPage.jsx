@@ -25,11 +25,7 @@ const LogPage = () => {
 
   useEffect(() => {
     fetchData();
-
-    const fetchDataInterval = setInterval(fetchData, 500);
-
-    return () => clearInterval(fetchDataInterval);
-  }, [startDate, endDate]);
+  }, []);
 
   const fetchData = async () => {
     try {
@@ -45,12 +41,37 @@ const LogPage = () => {
     }
   };
 
+  console.log(logs);
+
   const convertToPST = dateTimeString => {
     const dateTimeUTC = new Date(dateTimeString);
     return dateTimeUTC.toLocaleTimeString('en-US', {
       timeZone: 'Asia/Singapore',
     });
   };
+
+  const handleFetchData = () => {
+    fetchData();
+  };
+
+  // Alternative filtering approach
+  const filteredLogs = logs.map(log => {
+    const filteredTimeIn = log.timeIn.filter(entry => {
+      const date = new Date(entry.date);
+      return date >= startDate && date <= endDate;
+    });
+
+    const filteredTimeOut = log.timeOut.filter(entry => {
+      const date = new Date(entry.date);
+      return date >= startDate && date <= endDate;
+    });
+
+    return {
+      ...log,
+      timeIn: filteredTimeIn,
+      timeOut: filteredTimeOut,
+    };
+  });
 
   return (
     <Box p={4}>
@@ -82,8 +103,14 @@ const LogPage = () => {
               dateFormat="yyyy-MM-dd"
             />
           </div>
+          <Button ml={4} onClick={handleFetchData}>
+            Fetch Data
+          </Button>
         </Flex>
-        <PDFDownloadLink document={<LogsPDF logs={logs} />} fileName="logs.pdf">
+        <PDFDownloadLink
+          document={<LogsPDF logs={filteredLogs} />}
+          fileName="logs.pdf"
+        >
           {({ loading }) => (loading ? 'Loading document...' : 'Export to PDF')}
         </PDFDownloadLink>
       </Flex>
@@ -98,7 +125,7 @@ const LogPage = () => {
             </Tr>
           </Thead>
           <Tbody>
-            {logs.map((log, index) => (
+            {filteredLogs.map((log, index) => (
               <React.Fragment key={index}>
                 {log.timeIn.map((timeIn, idx) => (
                   <Tr key={`${index}-${idx}`}>
