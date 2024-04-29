@@ -33,6 +33,14 @@ const ProfilePage = ({ email }) => {
     fetchCarDetails();
   }, [email]);
 
+  // Function to convert UTC time to Singapore time
+  const convertToSGTime = dateTimeString => {
+    const dateTimeUTC = new Date(dateTimeString);
+    return dateTimeUTC.toLocaleTimeString('en-US', {
+      timeZone: 'Asia/Singapore',
+    });
+  };
+
   return (
     <Box p={8}>
       <Stack spacing={4}>
@@ -64,8 +72,10 @@ const ProfilePage = ({ email }) => {
               timeIn.map((entry, index) => (
                 <Tr key={index}>
                   <Td>{new Date(entry.date).toLocaleDateString()}</Td>
-                  <Td>{entry.time}</Td>
-                  <Td>{timeOut[index] && timeOut[index].time}</Td>
+                  <Td>{convertToSGTime(entry.date)}</Td>
+                  <Td>
+                    {timeOut[index] && convertToSGTime(timeOut[index].date)}
+                  </Td>
                 </Tr>
               ))}
           </Tbody>

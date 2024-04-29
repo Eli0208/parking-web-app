@@ -32,6 +32,13 @@ const styles = StyleSheet.create({
   },
 });
 
+const convertToPST = dateTimeString => {
+  const dateTimeUTC = new Date(dateTimeString);
+  return dateTimeUTC.toLocaleTimeString('en-US', {
+    timeZone: 'Asia/Singapore',
+  });
+};
+
 const LogsPDF = ({ logs }) => (
   <Document>
     <Page size="A4" style={styles.page}>
@@ -65,11 +72,13 @@ const LogsPDF = ({ logs }) => (
                     </Text>
                   </View>
                   <View style={styles.tableCell}>
-                    <Text style={styles.text}>{timeIn.time}</Text>
+                    <Text style={styles.text}>{convertToPST(timeIn.date)}</Text>
                   </View>
                   <View style={styles.tableCell}>
                     <Text style={styles.text}>
-                      {log.timeOut[idx] ? log.timeOut[idx].time : '-----------'}
+                      {log.timeOut[idx]
+                        ? convertToPST(log.timeOut[idx].date)
+                        : '-----------'}
                     </Text>
                   </View>
                 </View>
