@@ -111,6 +111,12 @@ const CarList = () => {
                 <Box mb={4}>
                   <strong>Color:</strong> {selectedCar.color}
                 </Box>
+                <Box mb={4}>
+                  <strong>Department:</strong> {selectedCar.department}
+                </Box>
+                <Box mb={4}>
+                  <strong>Position:</strong> {selectedCar.position}
+                </Box>
               </>
             )}
             <Table variant="striped" colorScheme="gray">

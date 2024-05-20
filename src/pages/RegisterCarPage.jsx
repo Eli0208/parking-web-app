@@ -7,6 +7,7 @@ import {
   FormControl,
   FormLabel,
   Input,
+  Select,
   Button,
   Center,
 } from '@chakra-ui/react';
@@ -21,6 +22,8 @@ const RegisterCarPage = () => {
   const [color, setColor] = useState('');
   const [password, setPassword] = useState('');
   const [ownersEmail, setOwnersEmail] = useState('');
+  const [department, setDepartment] = useState('');
+  const [position, setPosition] = useState('');
   const navigate = useNavigate();
 
   const generatePassword = () => {
@@ -51,6 +54,8 @@ const RegisterCarPage = () => {
           brand,
           model,
           color,
+          department,
+          position,
           password: newPassword,
         }
       );
@@ -138,6 +143,26 @@ const RegisterCarPage = () => {
               value={color}
               onChange={e => setColor(e.target.value)}
             />
+          </FormControl>
+          <FormControl id="department">
+            <FormLabel>Department</FormLabel>
+            <Input
+              type="text"
+              value={department}
+              onChange={e => setDepartment(e.target.value)}
+            />
+          </FormControl>
+          <FormControl id="position">
+            <FormLabel>Position</FormLabel>
+            <Select
+              value={position}
+              onChange={e => setPosition(e.target.value)}
+            >
+              <option value="">Select Position</option>
+              <option value="Teaching">Teaching</option>
+              <option value="Non-Teaching">Non-Teaching</option>
+              <option value="Admin">Admin</option>
+            </Select>
           </FormControl>
           <FormControl id="password">
             <FormLabel>Password</FormLabel>
